@@ -4,7 +4,15 @@
 <div class="table-agile-info">
   <div class="panel panel-default">
     <div class="panel-heading">
-      Danh sách mã giảm giá
+      <div class="col-sm-2">
+        
+      </div>
+      <div class="col-sm-8"><center>Danh sách mã giảm giá</center></div>
+      <div class="col-sm-2">
+        @can('add-coupon')
+          <a class="btn btn-info" href="{{URL::to('/add-coupon')}} ">Thêm Coupon</a>      
+        @endcan 
+      </div>
     </div>
     <?php
       $message = Session::get('message');
@@ -13,49 +21,42 @@
         Session::put('message',null);
       }
     ?>
-    <div class="row w3-res-tb">
-      <div class="col-sm-5 m-b-xs">
-        <select class="input-sm form-control w-sm inline v-middle">
-          <option value="0">Bulk action</option>
-          <option value="1">Delete selected</option>
-          <option value="2">Bulk edit</option>
-          <option value="3">Export</option>
-        </select>
-        <button class="btn btn-sm btn-default">Apply</button>                
-      </div>
-      <div class="col-sm-4">
-      </div>
-      <div class="col-sm-3">
-        <div class="input-group">
-          <input type="text" class="input-sm form-control" placeholder="Search">
-          <span class="input-group-btn">
-            <button class="btn btn-sm btn-default" type="button">Go!</button>
-          </span>
-        </div>
-      </div>
-    </div>
-    <div class="table-responsive">
-      <table class="table table-striped b-t b-light">
+    <div class="table-responsive"><br>
+      <table class="table table-striped b-t b-light" id="dataTableList">
         <thead>
           <tr>
-            <th style="width:20px;">
+            {{-- <th style="width:20px;">
               <label class="i-checks m-b-none">
                 <input type="checkbox"><i></i>
-              </label>
-            </th>
+              </label> 
+            </th>--}}
             <th>Tên mã</th>
             <th>Mã giảm giá</th>
             <th>Số lượng mã</th>
             <th>Loại mã giảm</th>
             <th>Số giảm</th>
-            <th style="width:30px;"></th>
+            <th>Ngày bắt đầu</th>
+            <th>Ngày kết thúc</th>
+            <th>Tình trạng</th>
+            <th>Hết hạn</th>
+            <th>Hành động</th>
           </tr>
         </thead>
         <tbody>
-          @foreach($coupon as $key => $coupon)
+          @foreach($all_coupon as $key => $coupon)
           <tr>
-            <td><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
-            <td>{{$coupon->coupon_name}}</td>
+            {{-- <td><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td> --}}
+            <td>
+              {{$coupon->coupon_name}}<p style="margin-top: 10px;"></p>
+              @if($coupon->coupon_status==1 && $coupon->coupon_quantity>0 && $coupon->coupon_end>$now)
+                <a class="btn btn-default btn-xs" href="{{URL::to('/send-coupon',[
+                  'coupon_quantity'=>$coupon->coupon_quantity,
+                  'coupon_code'=>$coupon->coupon_code,
+                  'coupon_number'=>$coupon->coupon_number,
+                  'coupon_function'=>$coupon->coupon_function
+                ])}}">Gửi email <br>cho khách</a>
+              @endif
+            </td>
             <td>{{$coupon->coupon_code}}</td>
             <td>{{$coupon->coupon_quantity}}</td>
 
@@ -74,9 +75,34 @@
               Giảm {{$coupon->coupon_number}} VND
               <?php   }         ?>
             </td>
-
+            <td>{{$coupon->coupon_start}}</td>
+            <td>{{$coupon->coupon_end}}</td>
             <td>
-              <a href="{{URL::to('/delete-coupon/'.$coupon->coupon_id)}}" class="active styling-icon" onclick="return confirm('Bạn có chắc muốn xóa mã này ?')" ui-toggle-class=""><i class="fa fa-times text-danger text"></i></a>
+              <?php
+              if($coupon->coupon_status==0){
+              ?>
+              <a href="{{URL::to('/active-coupon/'.$coupon->coupon_id)}}"><i class="fa-eye-styling fa fa-lock"></i></a>
+              <?php
+              }else{
+              ?>
+              <a href="{{URL::to('/unactive-coupon/'.$coupon->coupon_id)}}"><i class="fa-eye-styling fa fa-unlock"></i></a>
+              <?php 
+              }
+              ?>
+            </td>
+            <td>
+              
+                @if($coupon->coupon_end>=$now)
+                  <p style="color: green;">còn hạn</p>
+                @else
+                  <p style="color: red;">hết hạn</p>
+                @endif
+               
+            </td>
+            <td>
+              @can('delete-coupon')
+              <a href="{{URL::to('/delete-coupon/'.$coupon->coupon_id)}}" class="active styling-icon" onclick="return confirm('Bạn có chắc muốn xóa mã này ?')" ui-toggle-class=""><i class="fa fa-trash-o text-danger text"></i></a>
+              @endcan
             </td>
           </tr>
           @endforeach
@@ -84,22 +110,17 @@
       </table>
     </div>
     <footer class="panel-footer">
-      <div class="row">
+      {{-- <div class="row">
         
         <div class="col-sm-5 text-center">
           <small class="text-muted inline m-t-sm m-b-sm">showing 20-30 of 50 items</small>
         </div>
         <div class="col-sm-7 text-right text-center-xs">                
           <ul class="pagination pagination-sm m-t-none m-b-none">
-            <li><a href=""><i class="fa fa-chevron-left"></i></a></li>
-            <li><a href="">1</a></li>
-            <li><a href="">2</a></li>
-            <li><a href="">3</a></li>
-            <li><a href="">4</a></li>
-            <li><a href=""><i class="fa fa-chevron-right"></i></a></li>
-          </ul>
+            {{ $all_coupon->links( "pagination::bootstrap-4") }}
+          </ul> 
         </div>
-      </div>
+      </div> --}}
     </footer>
   </div>
 </div>

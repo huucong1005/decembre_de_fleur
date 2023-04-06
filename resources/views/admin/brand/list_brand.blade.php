@@ -4,7 +4,13 @@
 <div class="table-agile-info">
   <div class="panel panel-default">
     <div class="panel-heading">
-      Danh sách thương hiệu sản phẩm
+      <div class="col-sm-2"></div>
+      <div class="col-sm-8"><center>Danh sách thương hiệu sản phẩm</center></div>
+      <div class="col-sm-2">
+          @can('add-brand')
+            <a class="btn btn-info" href="{{URL::to('/add-brand')}}">Thêm thương hiệu</a>   
+          @endcan   
+      </div>  
     </div>
     <?php
       $message = Session::get('message');
@@ -13,47 +19,26 @@
         Session::put('message',null);
       }
     ?>
-    <div class="row w3-res-tb">
-      <div class="col-sm-5 m-b-xs">
-        <select class="input-sm form-control w-sm inline v-middle">
-          <option value="0">Bulk action</option>
-          <option value="1">Delete selected</option>
-          <option value="2">Bulk edit</option>
-          <option value="3">Export</option>
-        </select>
-        <button class="btn btn-sm btn-default">Apply</button>                
-      </div>
-      <div class="col-sm-4">
-      </div>
-      <div class="col-sm-3">
-        <div class="input-group">
-          <input type="text" class="input-sm form-control" placeholder="Search">
-          <span class="input-group-btn">
-            <button class="btn btn-sm btn-default" type="button">Go!</button>
-          </span>
-        </div>
-      </div>
-    </div>
-    <div class="table-responsive">
-      <table class="table table-striped b-t b-light">
+    <div class="table-responsive"><br>
+      
+      <table class="table table-striped b-t b-light" id="dataTableList">
         <thead>
           <tr>
-            <th style="width:20px;">
-              <label class="i-checks m-b-none">
-                <input type="checkbox"><i></i>
-              </label>
-            </th>
+            <th>Thứ tự</th>
             <th>Tên thương hiệu</th>
+            <th>Slug</th>
             <th>Hiển thị</th>
-            <th style="width:30px;"></th>
+            <th>Hành động</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="brand_order">
           @foreach($list_brand as $key => $brand)
-          <tr>
-            <td><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
+          <tr id="{{$brand->brand_id}}">
+            <td>{{$brand->brand_order}}</td>
             <td>{{$brand->brand_name}}</td>
+            <td>{{$brand->brand_slug}}</td>
             <td>
+
               <?php
               if($brand->brand_status==0){
               ?>
@@ -65,36 +50,37 @@
               <?php 
               }
               ?>
+
             </td>
             <td>
+              @can('edit-brand')
               <a href="{{URL::to('/edit-brand/'.$brand->brand_id)}}" class="active styling-icon" ui-toggle-class=""><i class="fa fa-pencil-square-o text-success text-active"></i></a>
-            </td>
-            <td>
-              <a href="{{URL::to('/delete-brand/'.$brand->brand_id)}}" class="active styling-icon" onclick="return confirm('Bạn có chắc muốn xóa thương hiệu này ?')" ui-toggle-class=""><i class="fa fa-times text-danger text"></i></a>
+              @endcan
+              <span style="margin: 0px 8px;"></span>
+              @can('delete-brand')
+              <a href="{{URL::to('/delete-brand/'.$brand->brand_id)}}" class="active styling-icon" onclick="return confirm('Bạn có chắc muốn xóa thương hiệu này ?')" ui-toggle-class=""><i class="fa fa-trash-o text-danger text"></i></a>
+              @endcan
             </td>
           </tr>
           @endforeach
         </tbody>
       </table>
     </div>
-    <footer class="panel-footer">
+   {{--  <footer class="panel-footer">
       <div class="row">
         
         <div class="col-sm-5 text-center">
           <small class="text-muted inline m-t-sm m-b-sm">showing 20-30 of 50 items</small>
         </div>
+        
         <div class="col-sm-7 text-right text-center-xs">                
           <ul class="pagination pagination-sm m-t-none m-b-none">
-            <li><a href=""><i class="fa fa-chevron-left"></i></a></li>
-            <li><a href="">1</a></li>
-            <li><a href="">2</a></li>
-            <li><a href="">3</a></li>
-            <li><a href="">4</a></li>
-            <li><a href=""><i class="fa fa-chevron-right"></i></a></li>
-          </ul>
+            {{ $list_brand->links( "pagination::bootstrap-4") }}
+          </ul> 
         </div>
+ 
       </div>
-    </footer>
+    </footer>--}}
   </div>
 </div>
 

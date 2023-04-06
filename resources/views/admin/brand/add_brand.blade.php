@@ -11,7 +11,11 @@
                                     {{ csrf_field() }}
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Tên thương hiệu</label>
-                                    <input type="text" name="brand_name" class="form-control" id="exampleInputEmail1" placeholder="Tên thương hiệu" required>
+                                    <input type="text" name="brand_name" class="form-control" placeholder="Tên thương hiệu" required id="slug" onkeyup="ChangeToSlug();">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Slug</label>
+                                    <input type="text" name="brand_slug" class="form-control " id="convert_slug" placeholder="slug">
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputPassword1">Mô tả</label>
@@ -21,8 +25,8 @@
                                 <div class="form-group">
                                 	<label for="exampleInputPassword1">Hiển thị</label>
                                 	<select name="brand_status" class="form-control m-bot15">
-                               			<option value="0">Ẩn</option>
                                 		<option value="1">Hiển</option>
+                                        <option value="0">Ẩn</option>
                             		</select>
                                 </div>
 

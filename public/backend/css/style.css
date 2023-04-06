@@ -744,7 +744,7 @@ ul.top-menu>li>a:hover,ul.top-menu>li>a:focus {
   -moz-transition: 0.5s all;
   -o-transition: 0.5s all;
 }
-.market-update-right i.fa.fa-users {
+.market-update-right i.fa.fa-th {
     font-size: 3em;
     color:#fff;
    text-align: left;
@@ -776,11 +776,11 @@ ul.top-menu>li>a:hover,ul.top-menu>li>a:focus {
 /*--market--*/
 .panel-heading {
     position: relative;
-    height: 57px;
-    line-height: 57px;
+    height: 55px;
+    line-height: 55px;
     letter-spacing: 0.2px;
     color: #000;
-    font-size: 18px;
+    font-size: 1.2rem;
     font-weight: 400;
     padding: 0 16px;
     background:#ddede0;
@@ -791,6 +791,12 @@ ul.top-menu>li>a:hover,ul.top-menu>li>a:focus {
 }
 .panel {
     border: none ! important;
+}
+.text-align-left{
+    text-align: left ! important;
+}
+.text-align-right{
+    text-align: right! important;
 }
 .agileinfo-grap {
     padding: 2em;
@@ -1011,6 +1017,14 @@ div#graph1,div#graph4,div#graph5,div#graph6,div#graph7,div#graph8,div#graph9 {
 .task-desc{
 	font-size:12px;
 }
+ol.list_view a{
+    color: orange;
+    font-weight: 400;
+}
+ol.list_view{
+    margin: 10px 0;
+    color: #fff;
+}
 .wrapper-dropdown-3 .dropdown li a:hover span.task-desc {
 	color:#65cea7;
 }
@@ -1227,6 +1241,12 @@ h4.title {
     display: block;
     text-align: center;
     word-wrap: break-word;
+}
+table.table.table-bordered.table-dark{
+    background: #32383e;
+}
+table.table.table-bordered.table-dark{
+    color: #fff;
 }
 h3.icon-subheading {
     font-size: 28px;
@@ -3167,6 +3187,56 @@ i.fa-eye-styling.fa.fa-eye-slash{
     font-size: 28px;
     color: red;
 }
+
+i.fa-eye-styling.fa.fa-unlock{
+    font-size: 28px;
+    color: green;
+}
+i.fa-eye-styling.fa.fa-lock{
+    font-size: 28px;
+    color: red;
+}
 a.active.styling-icon{
     font-size: 28px;
 }
+ul.list_rep li{
+    list-style-type: decimal;
+    color: #8b5c7e;
+    margin: 5px 30px;
+}
+#category_order .ui-state-highlight{
+    padding: 25px;
+    background-color: #ffffcc;
+    border: dotted 2px #ccc;
+    margin-top: 15px;
+    cursor: move;
+}
+#brand_order .ui-state-highlight{
+    padding: 25px;
+    background-color: #ffffcc;
+    border: dotted 2px #ccc;
+    margin-top: 15px;
+    cursor: move;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

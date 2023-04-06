@@ -6,8 +6,8 @@
 	<title>Document</title>
 </head>
 <body>
-	<h1>Thư từ: {{$name}}</h1>
-	<h4>với nội dung: {{$body}}</h4>
+	<h2>Thư từ: {{$name}}</h2>
+	<p>với nội dung: {{$body}}</p>
 	
 </body>
 </html>

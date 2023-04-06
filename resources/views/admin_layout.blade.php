@@ -6,9 +6,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 -->
 <!DOCTYPE html>
 <head>
-<title>Dashboard</title>
+<title>Dashboard of Decembre de Fleur </title>
+  <link rel="icon" sizes="14x14" href="{{asset('public/uploads/logo/unknow.jpg')}}" type="image/gif">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="csrf-token" content="{{csrf_token()}}">
 <meta name="keywords" content="Visitors Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
 Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
@@ -22,15 +24,21 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <link href='//fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
 <!-- font-awesome icons -->
 <link rel="stylesheet" href="{{asset('public/backend/css/font.css')}}" type="text/css"/>
-<link href="{{asset('public/backend/css/font-awesome.css')}}" rel="stylesheet"> 
+<link rel="stylesheet" href="{{asset('public/backend/css/font-awesome.css')}}" > 
+<link rel="stylesheet" href="{{asset('public/backend/css/select2.min.css')}}" type="text/css"/>
 <link rel="stylesheet" href="{{asset('public/backend/css/morris.css')}}" type="text/css"/>
+<link rel="stylesheet" href="{{asset('public/backend/css/dataTables.bootstrap.css') }}">
+<link rel="stylesheet" href="{{asset('public/backend/css/bootstrap-tagsinput.css') }}">
+<link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+
 <!-- calendar -->
 <link rel="stylesheet" href="{{asset('public/backend/css/monthly.css')}}">
 <!-- //calendar -->
 <!-- //font-awesome icons -->
 <script src="{{asset('public/backend/js/jquery2.0.3.min.js')}}"></script>
-<script src="{{asset('public/backend/js/raphael-min.js')}}"></script>
-<script src="{{asset('public/backend/js/morris.js')}}"></script>
+
 </head>
 <body>
 <section id="container">
@@ -38,7 +46,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <header class="header fixed-top clearfix">
 <!--logo start-->
 <div class="brand">
-    <a href="index.html" class="logo">
+    <a href="{{URL::to('/dashboard')}}" class="logo">
         ADMIN
     </a>
     <div class="sidebar-toggle-box">
@@ -227,24 +235,30 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <div class="top-nav clearfix">
     <!--search & user info start-->
     <ul class="nav pull-right top-menu">
-        <li>
+        {{-- <li>
             <input type="text" class="form-control search" placeholder=" Search">
-        </li>
+        </li> --}}
         <!-- user login dropdown start-->
         <li class="dropdown">
             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                <img alt="" src="{{asset('public/backend/images/2.png')}}">
-                <span class="username">
-            <?php 
-                $name = Session::get('admin_name');
-                if($name){ echo $name; }
-            ?>
+                <span style="line-height: 30px; margin: 15px;" class="username">
+                    @php    
+                        if (Auth::check()) {    
+                    @endphp
+                        {{Auth::user()->name}}
+                    @php
+                        }else{
+                    @endphp
+                        You're not sign in
+                    @php
+                        }
+                    @endphp
                 </span>
                 <b class="caret"></b>
             </a>
             <ul class="dropdown-menu extended logout">
-                <li><a href="#"><i class=" fa fa-suitcase"></i>Profile</a></li>
-                <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
+               {{--  <li><a href="#"><i class=" fa fa-suitcase"></i>Profile</a></li>
+                <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li> --}}
                 <li><a href="{{URL::to('/logout')}}"><i class="fa fa-key"></i> Đăng xuất</a></li>
             </ul>
         </li>
@@ -262,63 +276,111 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
         <div class="leftside-navigation">
             <ul class="sidebar-menu" id="nav-accordion">
                 <li>
-                    <a class="active" href="{{URL::to('/dashboard')}}">
+                    <a class="{{Request::segment(1)=='dashboard' ? 'active' : ''}}" href="{{URL::to('/dashboard')}}">
                         <i class="fa fa-dashboard"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
-                
-                <li class="sub-menu">
-                    <a href="javascript:;">
-                        <i class="fa fa-book"></i>
-                        <span>Danh mục sản phẩm</span>
+                @can('list-category')
+                <li>
+                    <a href="{{URL::to('/list-category')}}" class="{{Request::segment(1)=='list-category'||Request::segment(1)=='edit-category'||Request::segment(1)=='add-category' ? 'active' : ''}}">
+                        <i class="fa fa-tags"></i>
+                        <span>Danh mục</span>
                     </a>
-                    <ul class="sub">
-						<li><a href="{{URL::to('/add-category')}}">Thêm danh mục</a></li>
-						<li><a href="{{URL::to('/list-category')}}">Danh sách danh mục</a></li>
-                        
-                    </ul>
                 </li>
-                <li class="sub-menu">
-                    <a href="javascript:;">
-                        <i class="fa fa-bullhorn"></i>
-                        <span>Thương hiệu sản phẩm </span>
+                @endcan
+                @can('list-brand')
+                <li >
+                    <a href="{{URL::to('/list-brand')}}" class="{{Request::segment(1)=='list-brand' ||Request::segment(1)=='edit-brand'||Request::segment(1)=='add-brand' ? 'active' : ''}}">
+                        <i class="fa fa-bookmark"></i>
+                        <span>Thương hiệu</span>
                     </a>
-                    <ul class="sub">
-                        <li><a href="{{URL::to('/add-brand')}}">Thêm thương hiệu</a></li>
-                        <li><a href="{{URL::to('/list-brand')}}">Danh sách thương hiệu</a></li>
-                        
-                    </ul>
                 </li>
+                @endcan
+ 
+                @can('list-product')
                 <li class="sub-menu">
-                    <a href="javascript:;">
-                        <i class="fa fa-book"></i>
-                        <span>Sản phẩm</span>
+                    <a href="javascript:;"  class="{{Request::segment(1)=='list-product' ||Request::segment(1)=='edit-product'||Request::segment(1)=='add-product' ||Request::segment(1)=='add-gallery'? 'active' : ''}}">
+                        <i class="fa fa-users"></i>
+                        <span>Quản lý sản phẩm</span>
                     </a>
                     <ul class="sub">
-                        <li><a href="{{URL::to('/add-product')}}">Thêm sản phẩm</a></li>
                         <li><a href="{{URL::to('/list-product')}}">Danh sách sản phẩm</a></li>
+                        <li><a href="{{URL::to('/list-product-discount')}}">Quản lý giá bán</a></li>
                     </ul>
-                </li>
+                 </li>
+                 @endcan
+                @can('list-order')
                 <li class="sub-menu">
-                    <a href="javascript:;">
-                        <i class="fa fa-book"></i>
+                    <a href="{{URL::to('/list-order')}}" class="{{Request::segment(1)=='list-order'||Request::segment(1)=='view-order' ? 'active' : ''}}">
+                        <i class="fa fa-tasks"></i>
                         <span>Đơn hàng</span>
                     </a>
-                    <ul class="sub">
-                        <li><a href="{{URL::to('/manage-order')}}">Quản lý đơn hàng</a></li>
-                    </ul>
                 </li>
+                @endcan
+                @can('list-feeship')
                 <li class="sub-menu">
-                    <a href="javascript:;">
-                        <i class="fa fa-th"></i>
+                    <a href="{{URL::to('/delivery')}}" class="{{Request::segment(1)=='delivery' ? 'active' : ''}}">
+                        <i class="fa fa-truck"></i>
                         <span>Phí vận chuyển</span>
                     </a>
-                    <ul class="sub">
-                        <li><a href="{{URL::to('/delivery')}}">Quản lý phí vận chuyển</a></li>
-                    </ul>
                 </li>
+                @endcan
+                @can('list-coupon')
                 <li class="sub-menu">
+                    <a href="{{URL::to('/list-coupon')}}" class="{{Request::segment(1)=='list-coupon'||Request::segment(1)=='add-coupon' ? 'active' : ''}}">
+                        <i class="fa fa-flash"></i>
+                        <span>Mã giảm giá</span>
+                    </a>
+                </li>
+                @endcan
+                @can('list-slider')
+                <li class="sub-menu">
+                    <a href="{{URL::to('/list-slider')}}" class="{{Request::segment(1)=='list-slider' ||Request::segment(1)=='edit-slider'||Request::segment(1)=='add-slider' ? 'active' : ''}}">
+                        <i class="fa fa-picture-o"></i>
+                        <span>Slider</span>
+                    </a>
+                </li>
+                @endcan
+                @can('list-user')
+                <li class="sub-menu">
+                    <a href="javascript:;"  class="{{Request::segment(1)=='list-user' ||Request::segment(1)=='edit-user'||Request::segment(1)=='add-user' ||Request::segment(1)=='list-roles' ||Request::segment(1)=='edit-roles'||Request::segment(1)=='add-roles' ? 'active' : ''}}">
+                        <i class="fa fa-users"></i>
+                        <span>Quản lý user</span>
+                    </a>
+                    <ul class="sub">
+                        <li><a href="{{URL::to('/list-user')}}">Danh sách user</a></li>
+                        @can('list-role')<li><a href="{{URL::to('/list-roles')}}">Danh sách phân quyền</a></li>@endcan
+                    </ul>
+                 </li>
+                 @endcan
+
+                 <li class="sub-menu">
+                    <a href="javascript:;" class="{{Request::segment(1)=='list-cate-post' ||Request::segment(1)=='edit-cate-post'||Request::segment(1)=='add-cate-post'||Request::segment(1)=='list-post' ||Request::segment(1)=='edit-post'||Request::segment(1)=='add-post' ? 'active' : ''}}">
+                        <i class="fa fa-th"></i>
+                        <span>Quản lý bài viết</span>
+                    </a>
+                    <ul class="sub">
+                        <li><a href="{{URL::to('/list-cate-post')}}">Danh mục bài viết</a></li>
+                        <li><a href="{{URL::to('/list-post')}}">Bài viết</a></li>
+                    </ul>
+                </li> 
+
+                <li class="sub-menu">
+                    <a href="{{URL::to('/list-comment')}}" class="{{Request::segment(1)=='list-comment' ? 'active' : ''}}">
+                        <i class="fa fa-comment"></i>
+                        <span>Quản lý bình luận</span>
+                    </a>
+                </li>
+
+                <li class="sub-menu">
+                    <a href="{{URL::to('/add-info')}}" class="{{Request::segment(1)=='add-info' ? 'active' : ''}}">
+                        <i class="fa fa-book"></i>
+                        <span>Thông tin website</span>
+                    </a>
+                </li>
+
+                {{-- <li class="sub-menu">
                     <a href="javascript:;">
                         <i class="fa fa-th"></i>
                         <span>Mã giảm giá</span>
@@ -327,19 +389,19 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                         <li><a href="{{URL::to('/add-coupon')}}">Thêm mã giảm giá</a></li>
                         <li><a href="{{URL::to('/list-coupon')}}">Danh sách mã giảm giá</a></li>
                     </ul>
-                </li>
-            {{--    <li class="sub-menu">
+                </li> 
+                <li class="sub-menu">
                     <a href="javascript:;">
-                        <i class="fa fa-tasks"></i>
-                        <span>Form Components</span>
+                        <i class=" fa fa-bar-chart-o"></i>
+                        <span>Slider</span>
                     </a>
                     <ul class="sub">
-                        <li><a href="form_component.html">Form Elements</a></li>
-                        <li><a href="form_validation.html">Form Validation</a></li>
-						<li><a href="dropzone.html">Dropzone</a></li>
+                        <li><a href="{{URL::to('/add-slider')}}">Thêm slider</a></li>
+                        <li><a href="{{URL::to('/list-slider')}}">Danh sách slider</a></li>
                     </ul>
-                </li>
-                <li class="sub-menu">
+                </li>--}}
+               
+                {{--<li class="sub-menu">
                     <a href="javascript:;">
                         <i class="fa fa-envelope"></i>
                         <span>Mail </span>
@@ -347,16 +409,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                     <ul class="sub">
                         <li><a href="mail.html">Inbox</a></li>
                         <li><a href="mail_compose.html">Compose Mail</a></li>
-                    </ul>
-                </li>
-                <li class="sub-menu">
-                    <a href="javascript:;">
-                        <i class=" fa fa-bar-chart-o"></i>
-                        <span>Charts</span>
-                    </a>
-                    <ul class="sub">
-                        <li><a href="chartjs.html">Chart js</a></li>
-                        <li><a href="flot_chart.html">Flot Charts</a></li>
                     </ul>
                 </li>
                 <li class="sub-menu">
@@ -396,7 +448,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
  <!-- footer -->
 		  <div class="footer">
 			<div class="wthree-copyright">
-			  <p>© 2017 Visitors. All rights reserved | Design by <a href="http://w3layouts.com">W3layouts</a></p>
+			  <p>© 2017 Visitors. All rights reserved | Design by <a href="#">W3layouts</a></p>
 			</div>
 		  </div>
   <!-- / footer -->
@@ -408,97 +460,229 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <script src="{{asset('public/backend/js/scripts.js')}}"></script>
 <script src="{{asset('public/backend/js/jquery.slimscroll.js')}}"></script>
 <script src="{{asset('public/backend/js/jquery.nicescroll.js')}}"></script>
+<script src="{{asset('public/backend/js/select2.min.js')}}"></script>
 <script src="{{asset('public/backend/js/jquery.form-validator.min.js')}}"></script>
+<script src="{{asset('public/backend/ckeditor/ckeditor.js')}}"></script>
+<script src="{{asset('public/backend/js/jquery.dataTables.js') }}"></script>
+<script src="{{asset('public/backend/js/dataTables.bootstrap.js') }}"></script>
+<script src="{{asset('public/backend/js/bootstrap-tagsinput.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" ></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+
+{!! Toastr::message() !!}
+
 <script type="text/javascript">
     $(document).ready(function(){
-
-        fetch_delivery();
-
-        function fetch_delivery(){
-            var _token = $('input[name="_token"]').val();
+        $('#category_order').sortable({
+            placeholder: 'ui-state-highlight',
+            update : function(event, ui) {
+                var page_id_array=new Array();
+                var _token = $('input[name="_token"]').val();
+                $('#category_order tr').each(function(){
+                    page_id_array.push($(this).attr("id"));
+                });
             $.ajax({
-                url : '{{url('/select-feeship')}}',
+                url : '{{url('/arrange-category')}}',
                 method: 'POST',
-                data: {_token:_token},
+                data: {_token:_token,page_id_array:page_id_array},
                 success:function(data){
-                    $('#load_delivery').html(data);
+                    alert(data);
+                } 
+            });
+
+            }
+        });
+
+        $('#brand_order').sortable({
+            placeholder: 'ui-state-highlight',
+            update : function(event, ui) {
+                var page_id_array=new Array();
+                var _token = $('input[name="_token"]').val();
+                $('#brand_order tr').each(function(){
+                    page_id_array.push($(this).attr("id"));
+                });
+                $.ajax({
+                url : '{{url('/arrange-brand')}}',
+                method: 'POST',
+                data: {_token:_token,page_id_array:page_id_array},
+                success:function(data){
+                    alert(data);
+                } 
+            });
+
+            }
+        });
+    });
+</script>
+
+
+<script type="text/javascript">
+    function previewfile(input) {
+        var file =$(".image-preview").get(0).files[0];
+        if (file){
+            var reader = new FileReader();
+            reader.onload= function() {
+                $(".previewImg").attr("src", reader.result);
+            }
+
+            reader.readAsDataURL(file);
+        }
+        
+    }
+</script>
+
+
+<script type="text/javascript">
+    $('#dataTableList').DataTable({
+    responsive: true,
+    "language": {
+        "emptyTable":     "Không tồn tại dữ liệu",
+        "lengthMenu":     "Hiển thị _MENU_ ",
+        "search":         "Tìm kiếm",
+        "paginate": {
+            "next":       "Tiếp",
+            "previous":   "Quay trở lại"
+        },
+        "info":           "Hiển thị  _PAGE_  của _PAGES_",
+        "processing": "",
+        "infoFiltered": " ",
+        "infoEmpty":"Không tồn tại dữ liệu",
+        "zeroRecords": " ",
+
+    },
+});
+</script>
+<script type="text/javascript">
+        $('.update_quantity_order').click(function(){
+            var ord_product_id=$(this).data('product_id');
+            var order_qty = $('.order_qty_'+ord_product_id).val();
+            var order_code= $('.order_code').val();
+            var _token = $('input[name="_token"]').val();
+
+            $.ajax({
+                url : '{{url('/update-qty')}}',
+                method: 'POST',
+                data: {_token:_token, ord_product_id:ord_product_id, order_qty:order_qty, order_code: order_code},
+                success:function(data){
+                    alert('Cập nhật số lượng thành công');
+                    location.reload();
+                } 
+        });
+
+        });
+</script>
+
+<script type="text/javascript">
+ 
+    function ChangeToSlug()
+        {
+            var slug;
+         
+            //Lấy text từ thẻ input title 
+            slug = document.getElementById("slug").value;
+            slug = slug.toLowerCase();
+            //Đổi ký tự có dấu thành không dấu
+                slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
+                slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e');
+                slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i');
+                slug = slug.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o');
+                slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u');
+                slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y');
+                slug = slug.replace(/đ/gi, 'd');
+                //Xóa các ký tự đặt biệt
+                slug = slug.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '');
+                //Đổi khoảng trắng thành ký tự gạch ngang
+                slug = slug.replace(/ /gi, "-");
+                //Đổi nhiều ký tự gạch ngang liên tiếp thành 1 ký tự gạch ngang
+                //Phòng trường hợp người nhập vào quá nhiều ký tự trắng
+                slug = slug.replace(/\-\-\-\-\-/gi, '-');
+                slug = slug.replace(/\-\-\-\-/gi, '-');
+                slug = slug.replace(/\-\-\-/gi, '-');
+                slug = slug.replace(/\-\-/gi, '-');
+                //Xóa các ký tự gạch ngang ở đầu và cuối
+                slug = '@' + slug + '@';
+                slug = slug.replace(/\@\-|\-\@|\@/gi, '');
+                //In slug ra textbox có id “slug”
+            document.getElementById('convert_slug').value = slug;
+        }
+           
+</script>
+
+<script type="text/javascript">
+    $('.order_details').change(function(){
+        var order_status =$(this).val();
+        var order_id =$(this).children(":selected").attr("id");
+        var _token = $('input[name="_token"]').val();
+
+        quantity=[];
+        $("input[name='product_sales_quantity']").each(function(){
+            quantity.push($(this).val());
+        });
+        order_product_id=[];
+        $("input[name='order_product_id']").each(function(){
+            order_product_id.push($(this).val());
+        });
+        a = 0;
+        for(i=0;i<order_product_id.length;i++){
+            var order_qty= $('.order_qty_'+order_product_id[i]).val();
+
+            var product_qty =$('.product_qty_'+order_product_id[i]).val();
+
+            if (parseInt(order_qty)>parseInt(product_qty) && order_status==2) {
+                a= a+1;
+                if (a==1) {
+                    alert('Trong kho không đủ hàng!');
+                }
+                $('.color_qty_'+order_product_id[i]).css('border', 'solid 2px red');
+            }
+        }
+
+        if (a==0){
+            $.ajax({
+                url : '{{url('/update-order-qty')}}',
+                method: 'POST',
+                data: {_token:_token, order_status:order_status, order_id:order_id, quantity:quantity,order_product_id:order_product_id},
+                success:function(data){
+                    alert('Cập nhật đơn hàng thành công');
+                    location.reload();
                 } 
             });
         }
 
-        $(document).on('blur','.feeship_edit',function(){
-            var feeship_id =$(this).data('feeship_id');
-            var fee_value =$(this).text();
-            var _token = $('input[name="_token"]').val();
-            $.ajax({
-                url : '{{url('/update-delivery')}}',
-                method: 'POST',
-                data: {feeship_id:feeship_id, fee_value:fee_value, _token:_token},
-                success:function(data){
-                    alert('update thành công');
-                    fetch_delivery();
-                } 
-            });
-        });
-
-        $('.add_delivery').click(function(){
-            
-            var city = $('.city').val();
-            var province = $('.province').val();
-            var wards = $('.wards').val();
-            var fee_ship = $('.fee_ship').val();
-            var _token = $('input[name="_token"]').val();
-            // alert(city); alert(province); alert(wards);alert(fee_ship);
-
-            $.ajax({
-                url : '{{url('/add-delivery')}}',
-                method: 'POST',
-                data: {city:city, province:province, wards:wards, fee_ship:fee_ship, _token:_token},
-                success:function(data){
-                    alert('Thêm phí vận chuyển thành công');
-                    fetch_delivery();
-                } 
-            });
-
-        });
-        $('.choose').on('change',function(){
-            var action =$(this).attr('id');
-            var ma_id= $(this).val();
-            var _token = $('input[name="_token"]').val();
-            var result = '';
-            
-            if(action=='city'){
-                result='province';   
-            }else{
-                result='wards';
-            }
-            $.ajax({
-                url : '{{url('/select-delivery')}}',
-                method: 'POST',
-                data: {action:action,ma_id:ma_id,_token:_token},
-                success:function(data){
-                    $('#'+result).html(data);
-                } 
-            })
-        });
-    })
+    });
 </script>
+
+<script type="text/javascript">
+    $('.select2_init').select2({
+        'placeholder':'Chọn phân quyền'
+        })
+
+</script>
+
+<script type="text/javascript">
+    $('.checkbox_wrapper').on('click', function(){
+        $(this).parents('.card').find('.checkbox_childrent').prop('checked', $(this).prop('checked'));
+    });
+
+    $('.checkall').on('click', function(){
+        $(this).parents().find('.checkbox_childrent').prop('checked', $(this).prop('checked'));
+        $(this).parents().find('.checkbox_wrapper').prop('checked', $(this).prop('checked'));
+    });
+</script>
+
 <script type="text/javascript">
     $.validate({
 
     });
 </script>
-<script src="{{asset('public/backend/ckeditor/ckeditor.js')}}"></script>
-<script>
-    CKEDITOR.replace('ckeditor');
-    CKEDITOR.replace('ckeditor1');
-    CKEDITOR.replace('ckeditor2');
-</script>
+
 
 <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/flot-chart/excanvas.min.js"></script><![endif]-->
 <script src="{{asset('public/backend/js/jquery.scrollTo.js')}}"></script>
 <!-- morris JavaScript -->	
-<script>
+{{-- <script>
 	$(document).ready(function() {
 		//BOX BUTTON SHOW AND CLOSE
 	   jQuery('.small-graph-box').hover(function() {
@@ -552,7 +736,17 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		
 	   
 	});
-	</script>
+	</script> --}}
+
+    
+{{--<script type="text/javascript">
+    CKEDITOR.replace('ckeditor',{
+        filebrowserImageUploadUrl:"{{url('uploads-ckeditor?_token='.csrf_token())}}",
+        filebrowserBrowseUrl:"{{url('file-browser?_token='.csrf_token())}}",
+        filebrowserUploadMethod:'form'
+    });
+
+</script> --}}
 <!-- calendar -->
 	<script type="text/javascript" src="{{asset('public/backend/js/monthly.js')}}"></script>
 	<script type="text/javascript">

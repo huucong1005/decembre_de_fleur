@@ -763,8 +763,9 @@ CREATE TABLE `tinhthanhpho` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
 
-
 INSERT INTO `tinhthanhpho` VALUES ('01', 'Thành phố Hà Nội', 'Thành phố Trung ương');
+
+
 INSERT INTO `tinhthanhpho` VALUES ('02', 'Tỉnh Hà Giang', 'Tỉnh');
 INSERT INTO `tinhthanhpho` VALUES ('04', 'Tỉnh Cao Bằng', 'Tỉnh');
 INSERT INTO `tinhthanhpho` VALUES ('06', 'Tỉnh Bắc Kạn', 'Tỉnh');

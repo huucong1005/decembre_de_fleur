@@ -12,7 +12,22 @@
                                     {{ csrf_field() }}
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Tên danh mục</label>
-                                    <input type="text" name="category_name" class="form-control" id="exampleInputEmail1" value="{{$edit_value->category_name}}"  required>
+                                    <input type="text" name="category_name" class="form-control"  id="slug" onkeyup="ChangeToSlug();" value="{{$edit_value->category_name}}"  required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Slug</label>
+                                    <input type="text" name="category_slug" class="form-control" id="convert_slug" value="{{$edit_value->category_slug}}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Danh mục gốc</label>
+                                    <select name="category_parent" class="form-control m-bot15">
+
+                                        <option value="0">Danh mục gốc</option> 
+                                        @foreach($category_parent as $key => $val)
+                                        <option {{$val->category_id==$edit_value->category_parent ? 'selected' : ''}} value="{{$val->category_id}}">{{$val->category_name}}</option> 
+                                        @endforeach
+
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputPassword1">Mô tả</label>

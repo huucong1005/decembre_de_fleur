@@ -4,7 +4,13 @@
 <div class="table-agile-info">
   <div class="panel panel-default">
     <div class="panel-heading">
-      Danh sách danh mục sản phẩm
+      <div class="col-sm-2"></div>
+      <div class="col-sm-8"><center>Danh sách danh mục sản phẩm</center></div>
+      <div class="col-sm-2">
+        @can('add-category')
+        <a class="btn btn-info" href="{{URL::to('/add-category')}}">Thêm danh mục</a>   
+        @endcan 
+      </div>
     </div>
     <?php
       $message = Session::get('message');
@@ -13,46 +19,43 @@
         Session::put('message',null);
       }
     ?>
-    <div class="row w3-res-tb">
-      <div class="col-sm-5 m-b-xs">
-        <select class="input-sm form-control w-sm inline v-middle">
-          <option value="0">Bulk action</option>
-          <option value="1">Delete selected</option>
-          <option value="2">Bulk edit</option>
-          <option value="3">Export</option>
-        </select>
-        <button class="btn btn-sm btn-default">Apply</button>                
-      </div>
-      <div class="col-sm-4">
-      </div>
-      <div class="col-sm-3">
-        <div class="input-group">
-          <input type="text" class="input-sm form-control" placeholder="Search">
-          <span class="input-group-btn">
-            <button class="btn btn-sm btn-default" type="button">Go!</button>
-          </span>
-        </div>
-      </div>
-    </div>
-    <div class="table-responsive">
-      <table class="table table-striped b-t b-light">
+    <form action="">
+      @csrf
+    <div class="table-responsive"><br>
+      <table class="table table-striped b-t b-light" id="dataTableList">
         <thead>
           <tr>
-            <th style="width:20px;">
+            {{-- <th style="width:20px;">
               <label class="i-checks m-b-none">
                 <input type="checkbox"><i></i>
               </label>
-            </th>
+            </th> --}}
+            <th>Thứ tự</th>
             <th>Tên danh mục</th>
+            <th>Slug</th>
+            <th>Thuộc danh mục</th>
             <th>Hiển thị</th>
-            <th style="width:30px;"></th>
+            <th>Hành động</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="category_order">
           @foreach($list_category as $key => $category)
-          <tr>
-            <td><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
+          <tr id="{{$category->category_id}}">
+            {{-- <td><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td> --}}
+            <td>{{$category->category_order}}</td>
             <td>{{$category->category_name}}</td>
+            <td>{{$category->category_slug}}</td>
+            <td>
+              @if($category->category_parent==0)
+                - - -
+              @else
+                @foreach($category_parent as$key =>$subItem)
+                  @if( $subItem->category_id==$category->category_parent)
+                    {{$subItem->category_name}}
+                  @endif
+                @endforeach
+              @endif  
+            </td>
             <td>
               <?php
               if($category->category_status==0){
@@ -67,33 +70,32 @@
               ?>
             </td>
             <td>
+              @can('edit-category')
               <a href="{{URL::to('/edit-category/'.$category->category_id)}}" class="active styling-icon" ui-toggle-class=""><i class="fa fa-pencil-square-o text-success text-active"></i></a>
-            </td>
-            <td>
-              <a href="{{URL::to('/delete-category/'.$category->category_id)}}" class="active styling-icon" onclick="return confirm('Bạn có chắc muốn xóa danh mục này ?')" ui-toggle-class=""><i class="fa fa-times text-danger text"></i></a>
+              @endcan
+            <span style="margin: 0px 8px;"></span>
+              @can('delete-category')
+              <a href="{{URL::to('/delete-category/'.$category->category_id)}}" class="active styling-icon" onclick="return confirm('Bạn có chắc muốn xóa danh mục này ?')" ui-toggle-class=""><i class="fa fa-trash-o text-danger text"></i></a>
+              @endcan
             </td>
           </tr>
           @endforeach
         </tbody>
       </table>
     </div>
+    </form>
     <footer class="panel-footer">
-      <div class="row">
+{{--       <div class="row">
         
         <div class="col-sm-5 text-center">
           <small class="text-muted inline m-t-sm m-b-sm">showing 20-30 of 50 items</small>
         </div>
         <div class="col-sm-7 text-right text-center-xs">                
           <ul class="pagination pagination-sm m-t-none m-b-none">
-            <li><a href=""><i class="fa fa-chevron-left"></i></a></li>
-            <li><a href="">1</a></li>
-            <li><a href="">2</a></li>
-            <li><a href="">3</a></li>
-            <li><a href="">4</a></li>
-            <li><a href=""><i class="fa fa-chevron-right"></i></a></li>
-          </ul>
+            {{ $list_category->links( "pagination::bootstrap-4") }}
+          </ul> 
         </div>
-      </div>
+      </div> --}}
     </footer>
   </div>
 </div>

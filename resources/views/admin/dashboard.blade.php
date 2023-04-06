@@ -1,17 +1,18 @@
 @extends('admin_layout')
 @section('admin_content')
-<h2>Dashboard analysis</h2>
+<h3>Tổng quát</h3>
+
 <!-- //market-->
-<div class="market-updates">
+<div class="market-updates row">
 	<div class="col-md-3 market-update-gd">
 		<div class="market-update-block clr-block-2">
 			<div class="col-md-4 market-update-right">
 				<i class="fa fa-eye"> </i>
 			</div>
 			 <div class="col-md-8 market-update-left">
-			 <h4>Visitors</h4>
-			<h3>13,500</h3>
-			<p>Other hand, we denounce</p>
+			 <h4>Khách ghé thăm</h4>
+			<h3>{{$visitor_this_month_count}}</h3>
+			<p>lượt truy cập/tháng này </p>
 		  </div>
 		  <div class="clearfix"> </div>
 		</div>
@@ -19,12 +20,12 @@
 	<div class="col-md-3 market-update-gd">
 		<div class="market-update-block clr-block-1">
 			<div class="col-md-4 market-update-right">
-				<i class="fa fa-users" ></i>
+				<i class="fa fa-th" ></i>
 			</div>
 			<div class="col-md-8 market-update-left">
-			<h4>Users</h4>
-				<h3>1,250</h3>
-				<p>Other hand, we denounce</p>
+			<h4>Sản phẩm</h4>
+				<h3>{{$product_active_count}}/{{$product_count}}</h3>
+				<p>đang kinh doanh</p>
 			</div>
 		  <div class="clearfix"> </div>
 		</div>
@@ -35,9 +36,9 @@
 				<i class="fa fa-usd"></i>
 			</div>
 			<div class="col-md-8 market-update-left">
-				<h4>Sales</h4>
-				<h3>1,500</h3>
-				<p>Other hand, we denounce</p>
+				<h4>Bài viết</h4>
+				<h3>{{$post_active_count}}/{{ $post_count}}</h3>
+				<p>đang hiển thị</p>
 			</div>
 		  <div class="clearfix"> </div>
 		</div>
@@ -48,9 +49,9 @@
 				<i class="fa fa-shopping-cart" aria-hidden="true"></i>
 			</div>
 			<div class="col-md-8 market-update-left">
-				<h4>Orders</h4>
-				<h3>1,500</h3>
-				<p>Other hand, we denounce</p>
+				<h4>Đơn hàng mới</h4>
+				<h3>{{$new_order_count}}</h3>
+				<p>đơn chưa được xử lý</p>
 			</div>
 		  <div class="clearfix"> </div>
 		</div>
@@ -59,7 +60,114 @@
 </div>	
 <!-- //market-->
 
+<h3>Thống kê doanh số</h3>
+<!-- calender-->
+	<div class="row">
+		<div class="panel-body">
+			
+				<form action="" autocomplete="off">
+				@csrf
+					<div class="col-md-2">
+						<p>Từ ngày:</p> 
+						<input type="text" id="datepicker1" readonly class="form-control">
+					</div>
 
+					<div class="col-md-2">
+						<p>Đến ngày:</p> 
+						<input type="text" id="datepicker2" readonly class="form-control">
+					</div>
+
+					<div class="col-md-1">
+						<br><input type="button" id="btn-dashboard-filter" class="btn btn-info btn-sm" value="Lọc kết quả">
+					</div>
+					<div class="col-md-2">
+						<br><h3 style="margin-top: 4px;"><center>hay là ...</center></h3 class="mt-1">
+					</div>
+
+					<div class="col-md-2">
+						<p>Lọc theo:</p>
+						<select name="sort" id="sort" class="dashboard-filter form-control" >
+			                <option value="">--- Chọn ---</option>
+			                <option value="week"> 7 ngày qua </option>
+			                <option value="lastmonth"> tháng trước </option>
+			                <option value="thismonth"> tháng này </option>
+			                <option value="year"> 365 ngày qua </option>
+            			</select>
+       					 
+					</div>
+					<div class="col-md-3"></div>
+				</form>
+				<br>
+
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div id="myfirstchart" style="height: 250px;"></div>
+		</div>
+	</div>
+
+<!-- calender-->
+
+{{-- count table access --}}
+<br><h3>Thống kê truy cập</h3><br>
+
+<div class="row">
+		<div class="col-md-12">
+			<table class="table table-bordered table-dark">
+				<thead>
+				    <tr>
+				      <th scope="col">Đang online</th>
+				      <th scope="col">Truy cập tháng trước</th>
+				      <th scope="col">Truy cập tháng này</th>
+				      <th scope="col">Truy cập năm nay</th>
+				      <th scope="col">Tổng truy cập</th>
+				    </tr>
+				</thead>
+				<tbody>
+				    <tr>
+				      <td>{{$visitor_count}}</td>
+				      <td>{{$visitor_last_month_count}}</td>
+				      <td>{{$visitor_this_month_count}}</td>
+				      <td>{{$visitor_year_count}}</td>
+				      <td>{{$visitor_total_count}}</td>
+				      
+				    </tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+{{-- count table access --}}
+
+<br><h3>Thống kê dữ liệu</h3><br>
+
+<div class="row">
+	<div class="col-md-3 col-xs-12">
+		<h4>Bộ đếm số liệu</h4>
+		<div id="donut-chart"></div>
+	</div>
+	<div class="col-md-4 col-xs-12">
+		<h4>Bài viết xem nhiều</h4>
+		<ol class="list_view">
+			@foreach($post_view as $key=>$postItem)
+			<li>
+				<a href="{{URL::to('/tin-tuc/'.$postItem->post_slug)}}" target="blank" title="{{$postItem->post_name}}">{{$postItem->post_name}} | <span style="color: black;">Lượt view:	{{$postItem->post_view}}</span></a>
+			</li>
+			@endforeach
+		</ol>
+	</div>
+	<div class="col-md-4 col-xs-12">
+		<h4>Sản phẩm xem nhiều</h4>
+		<ol class="list_view">
+			@foreach($product_view as $key=>$productItem)
+			<li>
+				<a href="{{URL::to('chi-tiet-san-pham/'.$productItem->product_slug)}}" target="blank" title="{{$productItem->product_name}}">{{$productItem->product_name}} | <span style="color: black;">Lượt view:	{{$productItem->product_view}}</span></a>
+			</li>
+			@endforeach
+		</ol>
+	</div>
+	<div class="col-md-1 col-xs-12"></div>
+</div>
 
 {{-- 		<div class="row">
 			<div class="panel-body">
@@ -376,5 +484,137 @@
 					</div>
 					<div class="clearfix"> </div>
 		</div> --}}
+
+<script type="text/javascript">
+    $(function(){
+        $( "#datepicker1" ).datepicker({
+            changeMonth: true,
+            changeYear: true,
+            prevText:"Tháng trước",
+            nextText:"Tháng sau",
+            dateFormat:"yy-mm-dd",
+            dayNamesMin: ["T2","T3","T4","T5","T6","T7","CN"],
+            duration: "slow"
+        });
+        $( "#datepicker2" ).datepicker({
+            changeMonth: true,
+            changeYear: true,
+            prevText:"Tháng trước",
+            nextText:"Tháng sau",
+            dateFormat:"yy-mm-dd",
+            dayNamesMin: ["T2","T3","T4","T5","T6","T7","CN"],
+            duration: "slow"
+        });
+
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function(){  
+        var donut = Morris.Donut({
+          element: 'donut-chart',
+          resize: true,
+          colors: [
+            '#459743',
+            '#78ca76',
+            '#0877f3',
+            '#76b5c5',
+            '#d3412c',
+            '#A2349a',
+            '#F38808'
+          ],
+          //labelColor:"#cccccc", // text color
+          //backgroundColor: '#333333', // border color
+          data: [
+            {label:"Sản phẩm ẩn",   value:<?php echo $product_unactive_count ?>},
+            {label:"Sản phẩm hiện", value:<?php echo $product_active_count ?>},
+            {label:"Bài viết ẩn",   value:<?php echo $post_unactive_count ?>},
+            {label:"Bài viết hiện", value:<?php echo $post_active_count ?>},
+            {label:"Khách hàng",    value:<?php echo $customer_count ?>},
+            {label:"Slider",        value:<?php echo $slider_count ?>},
+            {label:"Đơn hàng mới",  value:<?php echo $new_order_count ?>}
+          ]
+        });
+
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        chart30daysorder();
+
+//morrist type: Line, Bar, Area
+        var chart = new Morris.Area({
+          // ID of the element in which to draw the chart.
+          element: 'myfirstchart',
+          // Chart data records -- each entry in this array corresponds to a point on
+          // the chart.
+          lineColors:['#819C79','#fc8710','#A4ADD3','#FF6541','#766B56'],
+
+          pointFillColors:['#ffffff'],
+          pointStrokeColors:['black'],
+
+          gridTextColor:['black'],
+          //set opaciti for Area type
+          fillOpacity:0.2,
+          hideHover:'auto',
+          parseTime:false,
+          smooth:false,
+          resize:true,
+          // The name of the data record attribute that contains x-values.
+          xkey: 'period',
+          // A list of names of data record attributes that contain y-values.
+          ykeys: ['order','sales','profit','quantity'],
+          behaveLikeLine:true,
+          // Labels for the ykeys -- will be displayed when you hover over the
+          labels: ['Đơn hàng','Doanh số','Lợi nhuận','Số lượng']
+        });
+
+        function chart30daysorder() {
+            var _token = $('input[name="_token"]').val();
+            $.ajax({
+                url : '{{url('/days-order')}}',
+                method: 'POST',
+                dataType:'JSON',
+                data: {_token:_token},
+                success:function(data){
+                    chart.setData(data);
+                } 
+            });
+        };
+
+        $('.dashboard-filter').change(function() {
+            var _token = $('input[name="_token"]').val();
+            var dashboard_value=$(this).val();
+
+            $.ajax({
+                url : '{{url('/dashboard-filter')}}',
+                method: 'POST',
+                dataType:'JSON',
+                data: {_token:_token,dashboard_value:dashboard_value},
+                success:function(data){
+                    chart.setData(data);
+                } 
+            });
+        });
+
+        $('#btn-dashboard-filter').click(function() {
+            var _token = $('input[name="_token"]').val();
+            var date_from=$('#datepicker1').val();
+            var date_to=$('#datepicker2').val();
+
+            $.ajax({
+                url : '{{url('/filter-by-date')}}',
+                method: 'POST',
+                dataType:'JSON',
+                data: {_token:_token,date_to:date_to,date_from:date_from},
+                success:function(data){
+                    chart.setData(data);
+                } 
+            });
+        });
+
+    });
+</script>
 
 @endsection

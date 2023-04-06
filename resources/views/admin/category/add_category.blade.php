@@ -11,18 +11,32 @@
                                     {{ csrf_field() }}
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Tên danh mục</label>
-                                    <input type="text" name="category_name" class="form-control" id="exampleInputEmail1" placeholder="Tên danh mục" required>
+                                    <input type="text" name="category_name" class="form-control" placeholder="Tên danh mục" required id="slug" onkeyup="ChangeToSlug();" >
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Slug</label>
+                                    <input type="text" name="category_slug" class="form-control " id="convert_slug" placeholder="slug">
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputPassword1">Mô tả</label>
                                     <textarea style="resize: none" rows="6" class="form-control" name="category_desc" id="exampleInputPassword1" placeholder="Mô tả"></textarea>
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Danh mục gốc</label>
+                                    <select name="category_parent" class="form-control m-bot15">
+                                        <option value="0">Danh mục gốc</option> 
+                                        @foreach($category_parent as $key => $val)
+                                        <option value="{{$val->category_id}}">{{$val->category_name}}</option> 
+                                        @endforeach
+                                    </select>
+                                </div>
                                 
                                 <div class="form-group">
                                 	<label for="exampleInputPassword1">Hiển thị</label>
                                 	<select name="category_status" class="form-control m-bot15">
-                               			<option value="0">Ẩn</option>
-                                		<option value="1">Hiển</option>
+                                        <option value="1">Hiển</option>
+                                        <option value="0">Ẩn</option>
                             		</select>
                                 </div>
 

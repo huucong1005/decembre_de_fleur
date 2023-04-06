@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use App\Http\Requests;
+use Session;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\City;
 use App\Models\Province;
 use App\Models\Wards;
 use App\Models\Feeship;
-
+session_start();
 
 class DeliveryController extends Controller
 {
@@ -96,5 +97,30 @@ class DeliveryController extends Controller
         $fee_ship->save();
     }
 
+    public function caculate_fee(Request $request){
+        $data = $request->all();
+        if ($data['maxptt']) {
+            $feeship =Feeship::where('id_tp',$data['matp'])->where('id_qh',$data['maqh'])->where('id_xptt',$data['maxptt'])->get();
+            if($feeship){
+                $count_feeship = $feeship->count();
+                if($count_feeship>0) {
+                    foreach($feeship as $key =>$fee){
+                        Session::put('fee',$fee->fee_ship);
+                        Session::save();
+                    }
+                }else{
+                    Session::put('fee',20000);
+                    Session::save();
+                }
+            }
+            
+        }
+    }
      
+    public function unset_feeship(){ 
+        Session::forget('fee');
+        return redirect()->back();
+    }
+
+
 }

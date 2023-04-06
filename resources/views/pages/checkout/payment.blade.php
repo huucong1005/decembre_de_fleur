@@ -83,8 +83,8 @@
 				<input name="payment_option" type="radio" id="transfer_money"  value="transfer_money">
 				<label for="transfer_money"> Chuyển khoản</label>
 
-{{-- 			<input name="payment_option" type="radio" id="paypal"  value="paypal">
-				<label for="paypal"> Paypal</label> --}}
+{{-- 			<input name="payment_option" type="radio" id="vnpay"  value="vnpay">
+				<label for="vnpay">VN Pay</label> --}}
 
 				<input type="submit" name="send_order_place" value="đặt hàng" class="btn btn-primary btn-sm">
 		</div>

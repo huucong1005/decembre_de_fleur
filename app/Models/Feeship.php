@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Feeship extends Model
 {
-    public $timestamp = false;
+    public $timestamps = false;
     protected $fillable =[
         'id_tp', 'td_qh', 'id_xptt', 'fee_ship'
     ];

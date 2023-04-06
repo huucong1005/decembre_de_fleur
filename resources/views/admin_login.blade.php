@@ -32,9 +32,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<h2>Đăng nhập</h2>
 		<form action="{{URL::to('/admin-dashboard')}}" method="post">
 			{{ csrf_field() }}
-			<input type="email" class="ggg" name="admin_email" placeholder="Email" required="">
-			<input type="password" class="ggg" name="admin_password" placeholder="Mật khẩu" required="">
-			<span><input type="checkbox" />Ghi nhớ</span>
+			<input type="email" class="ggg" name="email" placeholder="Email" required="">
+			<input type="password" class="ggg" name="password" placeholder="Mật khẩu" required="">
+			<span><input name="remember_me" type="checkbox" />Ghi nhớ</span>
 			<h6><a href="#">Quên mật khẩu?</a></h6>
 				<div class="clearfix"></div>
 		<?php

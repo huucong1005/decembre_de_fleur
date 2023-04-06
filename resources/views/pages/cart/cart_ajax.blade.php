@@ -2,18 +2,17 @@
 @section('content')	
 
 	<section id="cart_items">
-			<div class="breadcrumbs">
-				<ol class="breadcrumb">
-				  <li><a href="{{URL::to('/trang-chu')}}">Trang chủ</a></li>
-				  <li class="active">Giỏ hàng</li>
-				</ol>
-			</div>
+			<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{{URL::to('/trang-chu')}}">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Giỏ hàng</li>
+  </ol>
 
 			<div class="table-responsive cart_info">
 				@if(session()->has('message'))
-					<div class="alert alert-success">{{ session()->get('message')}}</div>
+					<div class="alert alert-success">{!! session()->get('message')!!}</div>
 				@elseif(session()->has('error'))
-					<div class="alert alert-danger">{{ session()->get('error')}}</div>
+					<div class="alert alert-danger">{!! session()->get('error')!!}</div>
 				@endif
 	
 				<table class="table table-condensed">	
@@ -50,15 +49,27 @@
 							</td>
 							<td class="cart_description">
 								<h4>{{$cart['product_name']}}</h4>
-								<p>ID:{{$cart['product_id']}} </p>
+								<p><span>Mã sp: {{$cart['product_id']}}</span><br>
+								<span>Còn: {{$cart['product_quantity']}} sp</span></p>
 							</td>
 							<td class="cart_price">
 								<p>{{number_format($cart['product_price'],0,',','.')}} VND</p>
 							</td>
 							<td class="cart_quantity">
 								<div class="cart_quantity_button">
-									
-									<input class="cart_quantity" type="number" min="1" max="20" name="cart_qty[{{$cart['session_id']}}]" value="{{$cart['product_qty']}}" size="2">	
+									@php
+									if ($cart['product_quantity']>$cart['product_qty']) {
+									@endphp
+									<input class="cart_quantity" type="number" min="1" max="{{$cart['product_quantity']}}" name="cart_qty[{{$cart['session_id']}}]" size="2"
+									value="{{$cart['product_qty']}}" >	
+									@php
+									}else{
+									@endphp
+									<input class="cart_quantity" type="number" min="1" max="{{$cart['product_quantity']}}" name="cart_qty[{{$cart['session_id']}}]" size="2"
+									value="{{$cart['product_quantity']}}" >	
+									@php
+									}
+									@endphp
 								</div>
 							</td>
 							<td class="cart_total">
@@ -80,6 +91,13 @@
 								@if(Session::get('coupon'))
 									<a href="{{url('/unset-coupon')}}" class="btn btn-default check_out"> Xóa mã giảm giá</a>
 								@endif
+
+								@if(Session::get('customer_id'))
+									<a class="btn btn-default check_out" href="{{url('/checkout')}}">Đặt hàng</a>
+								@else
+									<a class="btn btn-default check_out" href="{{url('/login-checkout')}}">Đăng nhập để đặt hàng</a>
+								@endif
+
 							</td>
 							<td colspan="3">
 								<div class="total_area">								
@@ -113,7 +131,7 @@
 					@else
 						<tr>
 							<td colspan="5"><center><h4>
-								@php echo'Chưa có sản phẩm nào trong giỏ!' @endphp
+								<br>Chưa có sản phẩm nào trong giỏ!<br><br><a href="{{URL::to('/trang-chu')}}">Quay lại trang chủ</a>
 							</h4></center></td>
 						</tr>
 					@endif

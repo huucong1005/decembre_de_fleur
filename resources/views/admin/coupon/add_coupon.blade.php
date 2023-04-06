@@ -18,6 +18,14 @@
                                     <input type="text" name="coupon_code" class="form-control" id="exampleInputEmail1" placeholder="Nhập mã giảm giá" required>
                                 </div>
                                 <div class="form-group">
+                                    <label for="exampleInputEmail1">Ngày bắt đầu</label>
+                                    <input type="text" name="coupon_start" class="form-control" id="datepicker3" readonly required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Ngày kết thúc</label>
+                                    <input type="text" name="coupon_end" class="form-control" id="datepicker4" readonly required>
+                                </div>
+                                <div class="form-group">
                                     <label for="exampleInputEmail1">Số lượng mã</label>
                                     <input type="number" name="coupon_quantity" class="form-control" id="exampleInputEmail1" placeholder="Số lượng mã giảm giá" required>
                                 </div>
@@ -42,4 +50,28 @@
                     </section>
 
             </div>
+
+<script type="text/javascript">
+    $(function(){
+        $( "#datepicker3" ).datepicker({
+            changeMonth: true,
+            changeYear: true,
+            prevText:"Tháng trước",
+            nextText:"Tháng sau",
+            dateFormat:"yy-mm-dd",
+            dayNamesMin: ["T2","T3","T4","T5","T6","T7","CN"],
+            duration: "slow"
+        });
+        $( "#datepicker4" ).datepicker({
+            changeMonth: true,
+            changeYear: true,
+            prevText:"Tháng trước",
+            nextText:"Tháng sau",
+            dateFormat:"yy-mm-dd",
+            dayNamesMin: ["T2","T3","T4","T5","T6","T7","CN"],
+            duration: "slow"
+        });
+
+    });
+</script>
 @endsection

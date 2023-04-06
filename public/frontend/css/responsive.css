@@ -1,12 +1,11 @@
 /* lg */ 
 @media (min-width: 1200px) {
-
+.modal-lg{width: 1000px;}
 }
 
 /* md */
 @media (min-width: 992px) and (max-width: 1199px) {
- 
- 
+  .modal-lg{width: 900px;}
 .usa{
 	margin-right: 0;
 } 
@@ -37,7 +36,9 @@
 
 /* sm */
 @media (min-width: 768px) and (max-width: 991px) {
-   
+.modal-dialog{
+ 	width: 750px;
+}
 .shop-menu ul li a{
 	padding-left: 0;
 }
